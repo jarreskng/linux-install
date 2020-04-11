@@ -1,0 +1,125 @@
+#######################################################################################
+
+timedatectl set-ntp true
+
+#######################################################################################
+
+ip link set enp25s0 up
+dhcpcd enp25s0
+
+#######################################################################################
+
+parted /dev/sda mklabel gpt
+
+parted /dev/sda mkpart primary 1MiB 513MiB
+parted /dev/sda mkpart primary 513MiB 205314MiB
+
+parted /dev/sda set 1 esp on
+parted /dev/sda set 2 lvm on
+
+#######################################################################################
+
+pvcreate /dev/sda2
+vgcreate vg /dev/sda2
+lvcreate --name root --size 20G vg
+lvcreate --name home --size 20G vg
+lvcreate --name docker --size 20G vg
+
+#######################################################################################
+
+mkfs.fat -F32 /dev/sda1
+mkfs.ext4 -L root /dev/mapper/vg-root
+mkfs.ext4 -L home /dev/mapper/vg-home
+mkfs.ext4 -L docker /dev/mapper/vg-docker
+
+#######################################################################################
+
+mount /dev/mapper/vg-root /mnt
+mkdir /mnt/{boot,home,docker}
+mount /dev/sda1 /mnt/boot
+mount /dev/mapper/vg-home /mnt/home
+mount /dev/mapper/vg-docker /mnt/docker
+
+#######################################################################################
+
+pacstrap /mnt base base-devel linux linux-firmware linux-headers lvm2 man-db man-pages texinfo dhcpcd netctl zsh emacs-nox
+genfstab -U /mnt > /mnt/etc/fstab
+
+#######################################################################################
+
+arch-chroot /mnt
+
+#######################################################################################
+
+timedatectl set-timezone Europe/Kaliningrad
+hwclock --systohc
+
+#######################################################################################
+
+cat << EOF > /etc/locale.gen
+en_US.UTF-8 UTF-8
+ru_RU.UTF-8 UTF-8
+EOF
+
+locale-gen
+localectl set-locale en_US.UTF-8
+
+#######################################################################################
+
+cat << EOF > /etc/hosts
+127.0.0.1	localhost
+::1	     	localhost
+127.0.1.1    	wormhole.localdomain	wormhole
+EOF
+
+hostnamectl set-hostname wormhole
+
+#######################################################################################
+
+cat << EOF > /etc/modprobe.d/nobeep.conf
+blacklist pcspkr
+EOF
+
+#######################################################################################
+
+cat << EOF > /etc/mkinitcpio.conf
+MODULES=(amdgpu)
+BINARIES=()
+FILES=()
+HOOKS=(base systemd udev autodetect modconf block sd-lvm2 filesystems keyboard fsck)
+EOF
+
+mkinitcpio -P
+
+#######################################################################################
+
+passwd
+
+#######################################################################################
+
+bootctl --path /boot install
+
+cat << EOF > /boot/loader/loader.conf 
+default arch
+timeout 3
+console-mode max
+editor yes
+EOF
+
+pacman -S amd-ucode
+
+cat << EOF > /boot/loader/entries/arch.conf
+title    Arch Linux
+linux    /vmlinuz-linux
+initrd   /amd-ucode.img
+initrd   /initramfs-linux.img
+options  root=/dev/mapper/vg-root rw rootfstype=ext4 add_efi_memmap iommu=soft
+EOF
+
+#######################################################################################
+
+exit
+umount -R /mnt
+reboot
+
+#######################################################################################
