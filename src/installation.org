@@ -1,0 +1,156 @@
+** Pre-installation
+*** Verify the boot mode
+#+BEGIN_SRC sh
+ls /sys/firmware/efi/efivars
+#+END_SRC
+
+*** Update the system clock
+#+BEGIN_SRC sh
+timedatectl set-ntp true
+#+END_SRC
+
+*** Partition the disks
+#+BEGIN_SRC sh
+parted /dev/sda mklabel gpt
+
+parted /dev/sda mkpart primary 1MiB 512MiB
+parted /dev/sda mkpart primaty 513MiB 205314MiB
+
+parted /dev/sda set 1 esp on
+parted /dev/sda set 2 lvm on
+#+END_SRC
+
+*** Create lvm partitions
+#+BEGIN_SRC sh
+pvcreate /dev/sda2
+vgcreate vg /dev/sda2
+
+lvcreate --name root --size 20G vg
+lvcreate --name home --size 20G vg
+lvcreate --name docker --size 20G vg
+#+END_SRC
+
+*** Format the partitions
+#+BEGIN_SRC sh
+mkfs.fat -F32 /dev/sda1
+mkfs.ext4 -L root /dev/mapper/vg-root
+mkfs.ext4 -L home /dev/mapper/vg-home
+mkfs.ext4 -L docker /dev/mapper/vg-docker
+#+END_SRC
+
+*** Mount the file systems
+#+BEGIN_SRC sh
+mount /dev/mapper/vg-root /mnt
+mkdir /mnt/{boot,home,docker}
+mount /dev/mapper/vg-home /mnt/home
+mount /dev/mapper/vg-docker /mnt/docker
+mount /dev/sda1 /mnt/boot
+#+END_SRC
+
+** Installation
+*** Install essential packages
+#+BEGIN_SRC sh
+pacstrap /mnt base base-devel linux linux-firmware linux-headers lvm2 dosfstools ntfs-3g man-db man-pages texinfo dhcpcd netctl zsh zsh-completions emacs-nox git
+#+END_SRC
+
+** Configuration
+*** Fstab
+#+BEGIN_SRC sh
+genfstab -U /mnt > /mnt/etc/fstab
+#+END_SRC
+
+*** Chroot
+#+BEGIN_SRC sh
+arch-chroot /mnt
+#+END_SRC
+
+*** Time zone
+#+BEGIN_SRC sh
+timedatectl set-timezone Europe/Kaliningrad
+hwclock --systohc
+#+END_SRC
+
+*** Localization
+/etc/locale.gen
+#+BEGIN_SRC conf
+en_US.UTF-8 UTF-8
+ru_RU.UTF-8 UTF-8
+#+END_SRC
+
+/etc/locale.conf
+#+BEGIN_SRC conf
+LANG=en_US.UTF-8
+#+END_SRC
+
+/etc/vconsole.conf
+#+BEGIN_SRC conf
+KEYMAP=us
+FONT=drdos8x16
+#+END_SRC
+
+#+BEGIN_SRC sh
+locale-gen
+#+END_SRC
+
+*** Network configuration
+
+/etc/hosts
+#+BEGIN_SRC conf
+127.0.0.1    localhost
+::1          localhost
+127.0.1.1    wormhole.localdomain    wormhole
+#+END_SRC
+
+/etc/hostname
+#+BEGIN_SRC conf
+wormhole
+#+END_SRC
+
+*** Initramfs
+
+/etc/mkinitcpio.conf
+#+BEGIN_SRC conf
+MODULES=(amdgpu)
+BINARIES=()
+FILES=()
+HOOKS=(base systemd udev autodetect modconf block sd-lvm2 filesystems keyboard fsck)
+#+END_SRC
+
+#+BEGIN_SRC sh
+mkinitcpio -P
+#+END_SRC
+
+*** Root password
+#+BEGIN_SRC sh
+passwd
+#+END_SRC
+
+*** Boot loader
+#+BEGIN_SRC sh
+pacman -S amd-ucode
+bootctl --path /boot install
+#+END_SRC
+
+/boot/loader/loader.conf
+#+BEGIN_SRC conf
+default arch
+timeout 3
+editor yes
+console-mode max
+#+END_SRC
+
+/boot/loader/entries/arch.conf 
+#+BEGIN_SRC conf
+title	Arch Linux
+linux	/vmlinuz-linux
+initrd	/amd-ucode.img
+initrd	/initramfs-linux.img
+options	root=/dev/mapper/vg-root rw rootfstype=ext4 edd_efi_memmap iommu=soft
+#+END_SRC
+
+*** Reboot
+#+BEGIN_SRC sh
+exit
+umount -R /mnt && reboot
+#+END_SRC
+

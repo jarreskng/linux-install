@@ -1,0 +1,214 @@
+** System administration
+*** Users and groups
+#+BEGIN_SRC sh
+useradd -m -G wheel -s /bin/zsh <username>
+passwd <username>
+#+END_SRC
+
+*** Privilege elevation
+#+BEGIN_SRC sh
+export EDITOR=emacs
+visudo
+#+END_SRC
+
+*** Mount external storage
+#+BEGIN_SRC sh
+mkdir /mnt/storage
+lsblk -o uuid /dev/sdb1
+#+END_SRC
+
+/etc/fstab
+#+BEGIN_SRC conf
+UUID=e188c771-5797-41f5-83c2-c0608121b6a5    /mnt/storage    ext4    rw,relatime    0 2
+#+END_SRC
+
+#+BEGIN_SRC sh
+mount /dev/sdb1
+#+END_SRC
+
+*** Login as user
+#+BEGIN_SRC sh
+exit
+#+END_SRC
+
+** Dotfiles
+https://gitlab.com/jrs-linux/dotfiles
+
+** Core packages
+*** Secure shell
+#+BEGIN_SRC sh
+pacman -S openssh
+#+END_SRC
+
+#+BEGIN_SRC sh
+mkdir -p $HOME/.ssh
+chmod 700 /home/$USER/.ssh
+chmod 600 /home/$USER/.ssh/*
+chown -R $USER /home/$USER/.ssh
+#+END_SRC
+
+#+BEGIN_SRC sh
+cp -r $SECRET_STORE/ssh/* $HOME/.ssh
+#+END_SRC
+
+*** OpenVPN
+#+BEGIN_SRC sh
+pacman -S openvpn
+#+END_SRC
+
+#+BEGIN_SRC sh
+cp $SECRET_STORE/openvpn/* /etc/openvpn/client/
+#+END_SRC
+
+*** WireGuard
+#+BEGIN_SRC sh
+pacman -S wireguard-tools
+#+END_SRC
+
+#+BEGIN_SRC sh
+cp $SECRET_STORE/wireguard/wg0.conf /etc/wireguard/
+#+END_SRC
+
+*** GnuPG
+#+BEGIN_SRC sh
+pacman -S gnupg
+#+END_SRC
+
+#+BEGIN_SRC sh
+mkdir -p $GNUPGHOME
+chmod 700 $GNUPGHOME
+chmod 600 $GNUPGHOME/*
+chown -R $USER $GNUPGHOME
+#+END_SRC
+
+#+BEGIN_SRC sh
+gpg --import $SECRET_STORE/gnupg/public.asc
+gpg --import $SECRET_STORE/gnupg/private.asc
+#+END_SRC
+
+#+BEGIN_SRC sh
+gpg --edit-key <user-id>
+> trust > 5 > y > q
+#+END_SRC
+
+*** Password store
+#+BEGIN_SRC sh
+pacman -S pass
+#+END_SRC
+
+#+BEGIN_SRC sh
+git clone <password-store-repo> $PASSWORD_STORE_DIR
+#+END_SRC
+
+** User packages 
+*** Desktop environment
+#+BEGIN_SRC sh
+pacman -S xorg-server-xwayland sway waybar mako grim
+#+END_SRC
+
+*** Terminals
+#+BEGIN_SRC sh
+pacman -S termite termite-terminfo
+pacman -S tmux
+#+END_SRC
+
+*** Fonts
+#+BEGIN_SRC sh
+pacman -S noto-fonts noto-fonts-extra
+pacman -S ttf-font-awesome
+#+END_SRC
+
+*** Browsers
+#+BEGIN_SRC sh
+pacman -S chromium firefox
+#+END_SRC
+
+*** Audio
+#+BEGIN_SRC sh
+pacman -S pulseaudio pulsemixer
+pacman -S mpc mpd ncmpcpp
+#+END_SRC
+
+*** Video
+#+BEGIN_SRC sh
+pacman -S ffmpeg mpv youtube-dl
+#+END_SRC
+
+*** Messengers
+#+BEGIN_SRC sh
+pacman -S telegram-desktop
+#+END_SRC
+
+#+BEGIN_SRC sh
+mkdir -p /tmp/builds
+git clone https://aur.archlinux.org/skypeforlinux-stable-bin.git /tmp/builds/skype
+cd /tmp/builds/skype
+makepkg --instal --syncdeps --rmdeps --clean --needed
+#+END_SRC
+
+*** Utils
+#+BEGIN_SRC sh
+pacman -S polkit
+pacman -S pciutils usbutils lsof
+pacman -S parted pandoc
+#+END_SRC
+
+** Development packages
+*** Git
+#+BEGIN_SRC sh
+pacman -S git tig
+#+END_SRC
+
+*** Docker
+#+BEGIN_SRC sh
+pacman -S docker docker-compose
+#+END_SRC
+
+#+BEGIN_SRC sh
+usermod -aG docker $USER
+#+END_SRC
+
+*** Rider
+#+BEGIN_SRC sh
+mkdir -p /tmp/builds
+git clone https://aur.archlinux.org/rider.git /tmp/builds/rider
+cd /tmp/builds/rider
+makepkg --instal --syncdeps --rmdeps --clean --needed
+#+END_SRC
+
+*** Webstorm
+#+BEGIN_SRC sh
+mkdir -p /tmp/builds
+git clone https://aur.archlinux.org/webstorm.git /tmp/builds/webstorm
+cd /tmp/builds/webstorm
+makepkg --instal --syncdeps --rmdeps --clean --needed
+#+END_SRC
+
+*** Postgres
+#+BEGIN_SRC sh
+pacman -S postgresql-libs
+pacman -S python-psycopg2
+pip install pgcli
+#+END_SRC
+
+*** Nvm
+#+BEGIN_SRC sh
+mkdir -p /tmp/builds
+git clone https://aur.archlinux.org/nvm.git /tmp/builds/nvm
+cd /tmp/builds/nvm
+makepkg --instal --syncdeps --rmdeps --clean --needed
+#+END_SRC
+
+#+BEGIN_SRC sh
+nvm install 12
+nvm use 12
+#+END_SRC
+
+*** .NET Core
+#+BEGIN_SRC sh
+mkdir -p /tmp/builds
+curl -L https://dot.net/v1/dotnet-install.sh --output /tmp/builds/dotnet.sh
+chmod +x /tmp/builds/dotnet.sh
+sh /tmp/builds/dotnet.sh --install-dir /opt/dotnet -channel Current -version latest
+#+END_SRC
+
