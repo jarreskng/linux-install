@@ -1,0 +1,17 @@
+*** openvpn
+- add client.conf
+- run as nobody
+- restart systemd services on failure
+
+*** wireguard
+- use pass. dont use unencripted keys in config
+- use systemd-network instead of wireguard-tools
+
+*** nvm
+- store node_modules in xdg_data_home
+
+*** tmux
+- configure and use
+
+*** wofi
+- configuration and styles
