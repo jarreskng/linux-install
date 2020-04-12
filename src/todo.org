@@ -1,3 +1,6 @@
+*** lvm
+- scheduler for snapshots
+
 *** openvpn
 - add client.conf
 - run as nobody
