@@ -91,6 +91,10 @@ gpg --edit-key <user-id>
 > trust > 5 > y > q
 #+END_SRC
 
+#+BEGIN_SRC sh
+systemctl --user enable --now gpg-agent-*.socket
+#+END_SRC
+
 *** Password store
 #+BEGIN_SRC sh
 pacman -S pass
@@ -166,6 +170,10 @@ pacman -S docker docker-compose
 
 #+BEGIN_SRC sh
 usermod -aG docker $USER
+#+END_SRC
+
+#+BEGIN_SRC sh
+systemctl enable --now docker
 #+END_SRC
 
 *** Rider
