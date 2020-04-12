@@ -1,4 +1,18 @@
 ** System administration
+*** Network configuration
+/etc/systemd/network/20-wired.network
+#+BEGIN_SRC conf
+[Match]
+Name=enp25s0
+
+[Network]
+DHCP=ipv4
+#+END_SRC
+
+#+BEGIN_SRC sh
+systemctl enable --now systemd-networkd 
+#+END_SRC
+
 *** Users and groups
 #+BEGIN_SRC sh
 useradd -m -G wheel -s /bin/zsh <username>
