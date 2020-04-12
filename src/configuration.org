@@ -169,6 +169,13 @@ pacman -S docker docker-compose
 #+END_SRC
 
 #+BEGIN_SRC sh
+mkdir -p /tmp/builds
+git clone https://aur.archlinux.org/docker-credential-pass.git /tmp/builds/docker-pass
+cd /tmp/builds/docker-pass
+makepkg --instal --syncdeps --rmdeps --clean --needed
+#+END_SRC
+
+#+BEGIN_SRC sh
 usermod -aG docker $USER
 #+END_SRC
 
