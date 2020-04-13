@@ -121,7 +121,7 @@ git clone <password-store-repo> $PASSWORD_STORE_DIR
 ** User packages 
 *** Desktop environment
 #+BEGIN_SRC sh
-pacman -S xorg-server-xwayland sway waybar mako grim
+pacman -S xorg-server-xwayland sway waybar mako grim slurp
 #+END_SRC
 
 *** Terminals
@@ -150,6 +150,13 @@ pacman -S mpc mpd ncmpcpp
 *** Video
 #+BEGIN_SRC sh
 pacman -S ffmpeg mpv youtube-dl
+#+END_SRC
+
+#+BEGIN_SRC sh
+mkdir -p /tmp/builds
+git clone https://aur.archlinux.org/wf-recorder-git.git  /tmp/builds/recorder
+cd /tmp/builds/recorder
+makepkg --instal --syncdeps --rmdeps --clean --needed
 #+END_SRC
 
 *** Messengers
