@@ -47,7 +47,6 @@ exit
 
 ** Dotfiles
 https://gitlab.com/jrs-linux/dotfiles
-
 ** Core packages
 *** Secure shell
 #+BEGIN_SRC sh
@@ -128,6 +127,15 @@ pacman -S xorg-server-xwayland sway waybar mako grim slurp
 #+BEGIN_SRC sh
 pacman -S termite termite-terminfo
 pacman -S tmux
+#+END_SRC
+
+*** Emacs
+#+BEGIN_SRC sh
+pacman -S emacs-nox pandoc
+#+END_SRC
+
+#+BEGIN_SRC sh
+systemctl --user enable --now emacs 
 #+END_SRC
 
 *** Fonts
