@@ -123,6 +123,18 @@ git clone <password-store-repo> $PASSWORD_STORE_DIR
 pacman -S xorg-server-xwayland sway waybar mako grim slurp
 #+END_SRC
 
+*** Login manager
+#+BEGIN_SRC sh
+mkdir -p /tmp/builds
+git clone https://aur.archlinux.org/ly.git /tmp/builds/ly
+cd /tmp/builds/ly
+makepkg --instal --syncdeps --rmdeps --clean --needed
+#+END_SRC
+
+#+BEGIN_SRC sh
+systemctl enable --now ly
+#+END_SRC
+
 *** Terminals
 #+BEGIN_SRC sh
 pacman -S termite termite-terminfo
