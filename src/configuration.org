@@ -1,4 +1,4 @@
-** System administration
+x** System administration
 *** Network configuration
 /etc/systemd/network/20-wired.network
 #+BEGIN_SRC conf
@@ -120,7 +120,7 @@ git clone <password-store-repo> $PASSWORD_STORE_DIR
 ** User packages 
 *** Desktop environment
 #+BEGIN_SRC sh
-pacman -S xorg-server-xwayland sway waybar mako grim slurp
+pacman -S xorg-server-xwayland sway waybar bemenu mako grim slurp
 #+END_SRC
 
 *** Login manager
