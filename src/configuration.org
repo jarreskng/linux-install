@@ -1,4 +1,4 @@
-x** System administration
+** System administration
 *** Network configuration
 /etc/systemd/network/20-wired.network
 #+BEGIN_SRC conf
@@ -84,7 +84,7 @@ cp $SECRET_STORE/wireguard/wg0.conf /etc/wireguard/
 
 *** GnuPG
 #+BEGIN_SRC sh
-pacman -S gnupg
+pacman -S gnupg gcr
 #+END_SRC
 
 #+BEGIN_SRC sh
