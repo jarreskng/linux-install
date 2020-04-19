@@ -118,9 +118,23 @@ git clone <password-store-repo> $PASSWORD_STORE_DIR
 #+END_SRC
 
 ** User packages 
-*** Desktop environment
+*** DE (Wayland)
 #+BEGIN_SRC sh
-pacman -S xorg-server-xwayland sway waybar bemenu mako grim slurp
+pacman -S xorg-server-xwayland sway waybar bemenu mako grim slurp wl-
+#+END_SRC
+
+*** DE (Xorg)
+#+BEGIN_SRC sh
+pacman -S xorg-server xf86-video-amdgpu jsoncpp i3-gaps rofi dunst xclip scrot feh
+#+END_SRC
+
+#+BEGIN_SRC sh
+pacman -S jsoncpp
+
+mkdir -p /tmp/builds
+git clone https://aur.archlinux.org/polybar.git /tmp/builds/polybar
+cd /tmp/builds/polybar
+makepkg --instal --syncdeps --rmdeps --clean --needed
 #+END_SRC
 
 *** Login manager
