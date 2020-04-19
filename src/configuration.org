@@ -125,7 +125,7 @@ pacman -S xorg-server-xwayland sway waybar bemenu mako grim slurp wl-
 
 *** DE (Xorg)
 #+BEGIN_SRC sh
-pacman -S xorg-server xf86-video-amdgpu jsoncpp i3-gaps rofi dunst xclip scrot feh
+pacman -S xorg-server xorg-xinit xorg-xrdb xorg-xrandr xf86-video-amdgpu i3-gaps rofi dunst xclip scrot feh
 #+END_SRC
 
 #+BEGIN_SRC sh
