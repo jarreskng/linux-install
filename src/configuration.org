@@ -120,12 +120,12 @@ git clone <password-store-repo> $PASSWORD_STORE_DIR
 ** User packages 
 *** DE (Wayland)
 #+BEGIN_SRC sh
-pacman -S xorg-server-xwayland sway waybar bemenu mako grim slurp wl-
+pacman -S xorg-server-xwayland sway waybar bemenu mako grim slurp
 #+END_SRC
 
 *** DE (Xorg)
 #+BEGIN_SRC sh
-pacman -S xorg-server xorg-xinit xorg-xrdb xorg-xrandr xf86-video-amdgpu i3-gaps rofi dunst xclip scrot feh
+pacman -S xorg-server xorg-xinit xorg-xrdb xorg-xrandr xorg-xev  xf86-video-amdgpu i3-gaps rofi dunst xclip scrot feh
 #+END_SRC
 
 #+BEGIN_SRC sh
