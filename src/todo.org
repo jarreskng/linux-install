@@ -16,7 +16,5 @@
 *** tmux
 - configure and use
 
-*** wofi
-- configuration and styles
 *** rclone
 - use rclone as gdrive client

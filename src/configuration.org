@@ -182,6 +182,10 @@ pacman -S pulseaudio pulsemixer
 pacman -S mpc mpd ncmpcpp
 #+END_SRC
 
+#+BEGIN_SRC sh
+systemctl --user enable --now mpd.socket
+#+END_SRC
+
 *** Video
 #+BEGIN_SRC sh
 pacman -S ffmpeg mpv youtube-dl
