@@ -151,7 +151,7 @@ systemctl enable --now ly
 
 *** Terminals
 #+BEGIN_SRC sh
-pacman -S termite termite-terminfo
+pacman -S rxvt-unicode
 pacman -S tmux
 #+END_SRC
 
