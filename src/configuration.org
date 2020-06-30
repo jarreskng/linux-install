@@ -181,6 +181,7 @@ pacman -S chromium firefox
 *** Audio
 #+BEGIN_SRC sh
 pacman -S pulseaudio pulsemixer
+pacman -S pacman -S libpulse pulseaudio-alsa alsa-utils
 pacman -S mpc mpd ncmpcpp
 #+END_SRC
 
@@ -214,7 +215,7 @@ makepkg --instal --syncdeps --rmdeps --clean --needed
 
 *** Utils
 #+BEGIN_SRC sh
-pacman -S polkit
+pacman -S polkit strace
 pacman -S pciutils usbutils lsof
 pacman -S parted pandoc
 #+END_SRC
