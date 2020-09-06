@@ -9,6 +9,12 @@ ls /sys/firmware/efi/efivars
 timedatectl set-ntp true
 #+END_SRC
 
+*** Wipe file system
+#+BEGIN_SRC sh
+wipefs --all --force /dev/sda
+dd if=/dev/zero of=/dev/sda bs=1M status=progress
+#+END_SRC
+
 *** Partition the disks
 #+BEGIN_SRC sh
 parted /dev/sda mklabel gpt
@@ -145,7 +151,7 @@ title	Arch Linux
 linux	/vmlinuz-linux
 initrd	/amd-ucode.img
 initrd	/initramfs-linux.img
-options	root=/dev/mapper/vg-root rw rootfstype=ext4 edd_efi_memmap iommu=soft
+options	root=/dev/mapper/vg-root rw rootfstype=ext4 add_efi_memmap iommu=soft
 #+END_SRC
 
 *** Reboot

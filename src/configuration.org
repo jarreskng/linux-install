@@ -1,4 +1,19 @@
 ** System administration
+*** Users and groups
+#+BEGIN_SRC sh
+useradd -m -G wheel -s /bin/zsh <username>
+passwd <username>
+#+END_SRC
+*** Login as user
+#+BEGIN_SRC sh
+exit
+#+END_SRC
+*** Privilege elevation
+#+BEGIN_SRC sh
+export EDITOR=emacs
+visudo
+#+END_SRC
+
 *** Network configuration
 /etc/systemd/network/20-wired.network
 #+BEGIN_SRC conf
@@ -11,18 +26,6 @@ DHCP=ipv4
 
 #+BEGIN_SRC sh
 systemctl enable --now systemd-networkd 
-#+END_SRC
-
-*** Users and groups
-#+BEGIN_SRC sh
-useradd -m -G wheel -s /bin/zsh <username>
-passwd <username>
-#+END_SRC
-
-*** Privilege elevation
-#+BEGIN_SRC sh
-export EDITOR=emacs
-visudo
 #+END_SRC
 
 *** Mount external storage
@@ -40,10 +43,6 @@ UUID=e188c771-5797-41f5-83c2-c0608121b6a5    /mnt/storage    ext4    rw,relatime
 mount /dev/sdb1
 #+END_SRC
 
-*** Login as user
-#+BEGIN_SRC sh
-exit
-#+END_SRC
 
 ** Dotfiles
 https://gitlab.com/jrs-linux/dotfiles
@@ -117,15 +116,11 @@ pacman -S pass
 git clone <password-store-repo> $PASSWORD_STORE_DIR
 #+END_SRC
 
-** User packages 
-*** DE (Wayland)
-#+BEGIN_SRC sh
-pacman -S xorg-server-xwayland sway waybar bemenu mako grim slurp
-#+END_SRC
 
-*** DE (Xorg)
+** User packages 
+*** Desktop
 #+BEGIN_SRC sh
-pacman -S mesa lib32-mesa  xf86-video-amdgpu vulkan-radeon lib32-vulkan-radeon
+pacman -S mesa xf86-video-amdgpu vulkan-radeon
 pacman -S xorg-server xorg-xinit xorg-xrdb xorg-xrandr xorg-xev xdg-user-dirs 
 pacman -S i3-gaps rofi dunst xclip scrot feh
 #+END_SRC
@@ -181,7 +176,7 @@ pacman -S chromium firefox
 *** Audio
 #+BEGIN_SRC sh
 pacman -S pulseaudio pulsemixer
-pacman -S pacman -S libpulse pulseaudio-alsa alsa-utils
+pacman -S pacman -S pulseaudio-alsa
 pacman -S mpc mpd ncmpcpp
 #+END_SRC
 
@@ -219,6 +214,7 @@ pacman -S polkit strace
 pacman -S pciutils usbutils lsof
 pacman -S parted pandoc
 #+END_SRC
+
 
 ** Development packages
 *** Git
